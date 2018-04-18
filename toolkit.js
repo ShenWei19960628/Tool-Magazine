@@ -1,4 +1,64 @@
-// event = e || window.event;
+//排序
+var xm = {age : 100};
+var dm = {age : 10};
+var lm = {age : 1};
+var arr = [xm,dm,lm];
+ //每次传入两个值 
+arr.sort(function(a,b){
+   //a-b为正b和a调换 a-b为负a和b调换 为零不变
+    return a.age - b.age;
+});
+//对象属性拼接
+var test = {
+    test1 : {name:"小明"},
+    test2 : {name:"小东"},
+    test3 : {name:"小花"},
+    test4 : {name:"小胖"},
+    tests : function(num){
+        //重点看这
+        return this['test'+num];
+    }
+}
+
+//深度克隆
+function deepClone(origin, target){
+    var target = target || {},
+        toStr = Object.prototype.toString,
+        arrStr = "[object Array]";
+    for(var prop in origin){
+        if(origin.hasOwnProperty(prop)){
+            if(origin[prop] !== "null" && typeof(origin[prop]) == "object"){
+                if(toStr.call(origin[prop]) == arrStr){
+                    target[prop] = [];
+                }else{
+                    target[prop] = {};
+                }
+                //对象 数组继续
+                deepClone(origin[prop],target[prop]);
+            }else{
+                target[prop] = origin[prop];
+            }
+        }       
+    }
+    return target;
+}
+
+//圣杯模式
+function inherit(Target, Origin){
+    //中间层
+    function F() {};
+    F.prototype = Origin.prototype;
+    Target.prototype = new F();
+    Target.prototype.constuctor = Target;
+    //真正继承自谁
+    Target.prototype.uber = Origin.prototype;
+}
+//事件源对象获取兼容IE
+wrapper.onclick = function (e){
+    var event = e || window.event;
+    var target = event.target || event.srcElement;
+    console.log(target);
+}
 // addEvent 兼容IE绑定事件 ele元素 type类型 fun方法
 function addEvent(ele,type,fun){
     if(ele.addEventListener){
